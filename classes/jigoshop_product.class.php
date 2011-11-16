@@ -30,7 +30,8 @@ class jigoshop_product {
 	public $visibility;
 	public $product_type;
 	public $price;
-    public $sale_price;
+    	public $sale_price;
+    	public $percentage;
     
 	/**
 	 * Loads all product data from custom fields
@@ -527,6 +528,24 @@ class jigoshop_product {
         }
 
         return $price_html;
+    }
+
+	/** Returns the percentage saved on sale products */    
+    function get_percentage()
+    {
+	    $percentage_text = '';
+	    
+	    if (!empty($this->sale_price) && !empty($this->price) && $this->in_sale_date_range()) {
+	    	
+		    $percentage_a = str_replace('&pound;', '', jigoshop_price($this->price));
+		    $percentage_b = str_replace('&pound;', '',  jigoshop_price($this->sale_price));
+		    $calc_a = (($percentage_a - $percentage_b)/$percentage_a)*100;
+		    $percentage = round($calc_a);
+		    $percentage_text .= $percentage.'%';
+	    
+	    }   
+	    
+	    return $percentage_text;
     }
 
 	/** Returns the upsell product ids */
